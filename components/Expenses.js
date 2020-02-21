@@ -6,6 +6,8 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
+  Modal,
+  TouchableHighlight,
 } from 'react-native';
 import {uuid} from 'uuidv4';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -16,7 +18,7 @@ const Expenses = () => {
     { id: uuid(), date: new Date(), text: 'Eggs', amount: 100 },
     { id: uuid(), date: new Date(), text: 'Juice', amount: 100 },
   ]);
-
+  const [editing, setEditing] = useState(false);
   const addItem = newItem => {
     setExpenses(currentItems => {
       console.table(newItem)
@@ -28,13 +30,33 @@ const Expenses = () => {
     setExpenses(currentItems => currentItems.filter(item => item.id !== id));
   };
 
+  const pressEdit = id => {
+    setEditing(currentValue => !currentValue);
+  };
+
   return (
     <View>
       <AddItemComponent addItem={addItem} />
       <FlatList
         data={expenses}
-        renderItem={({item}) => <Expense item={item} remove={remove} />}
+        renderItem={({item}) => (
+          <Expense item={item} remove={remove} pressEdit={pressEdit} />
+        )}
       />
+      <Modal animationType="slide" transparent={false} visible={editing}>
+        <View style={{padding:60}}>
+          <View>
+            <AddItemComponent />
+            <TouchableHighlight
+              style={styles.btn}
+              onPress={() => {
+                setEditing(false);
+              }}>
+              <Text style={styles.btnText}>Hide Modal</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -77,7 +99,7 @@ const AddItemComponent = ({addItem}) => {
   );
 };
 
-const Expense = ({item, remove}) => {
+const Expense = ({item, remove, pressEdit}) => {
   let date = `${item.date.getMonth() + 1}/${item.date.getDate()}`;
   return (
     <TouchableOpacity>
@@ -92,7 +114,13 @@ const Expense = ({item, remove}) => {
           <Text style={styles.text}>{`₱${item.amount}`}</Text>
         </View>
         <View style={styles.icons}>
-          <Icon style={styles.icon} name="pencil" size={16} color="#3498db" />
+          <Icon
+            style={styles.icon}
+            name="pencil"
+            size={16}
+            color="#3498db"
+            onPress={() => pressEdit(item.id)}
+          />
           <Icon
             style={styles.icon}
             name="remove"
