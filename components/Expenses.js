@@ -12,23 +12,63 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([
-    {id: uuid(), date: new Date(), text: 'Milk', amount: 100},
-    {id: uuid(), date: new Date(), text: 'Eggs', amount: 100},
-    {id: uuid(), date: new Date(), text: 'Juice', amount: 100},
+    { id: uuid(), date: new Date(), text: 'Milk', amount: 100 },
+    { id: uuid(), date: new Date(), text: 'Eggs', amount: 100 },
+    { id: uuid(), date: new Date(), text: 'Juice', amount: 100 },
   ]);
+
+  const addItem = newItem => {
+    setExpenses(currentItems => {
+      console.table(newItem)
+      return [{id: uuid(), date: new Date(), ...newItem}, ...currentItems];
+    });
+  };
 
   return (
     <View>
-      <TextInput style={styles.input} />
-      <TouchableOpacity style={styles.btn}>
-        <Text style={styles.btnText}>
-          <Icon name="plus" size={20} /> Add Item
-        </Text>
-      </TouchableOpacity>
+      <AddItemComponent addItem={addItem} />
       <FlatList
         data={expenses}
         renderItem={({item}) => <Expense item={item} />}
       />
+    </View>
+  );
+};
+
+const AddItemComponent = ({addItem}) => {
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState();
+  const onChangeDescription = value => setDescription(value);
+  const onChangeAmount = value => setAmount(Number(value));
+  const onAdd = () => {
+    addItem({text: description, amount});
+  };
+  return (
+    <View>
+      <TextInput
+        style={styles.input}
+        placeholder="description"
+        value={description}
+        onChangeText={onChangeDescription}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="amount"
+        keyboardType='numeric'
+        value={amount}
+        onChangeText={onChangeAmount}
+      />
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={() => {
+          onAdd();
+          setDescription('');
+          setAmount('');
+        }}>
+        <Text style={styles.btnText}>
+          <Icon name="plus" size={20} /> Add Item
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
