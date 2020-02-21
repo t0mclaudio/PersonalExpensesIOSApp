@@ -24,12 +24,16 @@ const Expenses = () => {
     });
   };
 
+  const remove = id => {
+    setExpenses(currentItems => currentItems.filter(item => item.id !== id));
+  };
+
   return (
     <View>
       <AddItemComponent addItem={addItem} />
       <FlatList
         data={expenses}
-        renderItem={({item}) => <Expense item={item} />}
+        renderItem={({item}) => <Expense item={item} remove={remove} />}
       />
     </View>
   );
@@ -73,7 +77,7 @@ const AddItemComponent = ({addItem}) => {
   );
 };
 
-const Expense = ({item}) => {
+const Expense = ({item, remove}) => {
   let date = `${item.date.getMonth() + 1}/${item.date.getDate()}`;
   return (
     <TouchableOpacity>
@@ -89,7 +93,13 @@ const Expense = ({item}) => {
         </View>
         <View style={styles.icons}>
           <Icon style={styles.icon} name="pencil" size={16} color="#3498db" />
-          <Icon style={styles.icon} name="remove" size={16} color="#e74c3c" />
+          <Icon
+            style={styles.icon}
+            name="remove"
+            size={16}
+            color="#e74c3c"
+            onPress={() => remove(item.id)}
+          />
         </View>
       </View>
     </TouchableOpacity>
