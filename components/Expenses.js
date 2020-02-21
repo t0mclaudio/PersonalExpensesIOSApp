@@ -19,6 +19,8 @@ const Expenses = () => {
     { id: uuid(), date: new Date(), text: 'Juice', amount: 100 },
   ]);
   const [editing, setEditing] = useState(false);
+  const [activeItem, setActiveItem] = useState();
+
   const addItem = newItem => {
     setExpenses(currentItems => {
       console.table(newItem)
@@ -32,6 +34,15 @@ const Expenses = () => {
 
   const pressEdit = id => {
     setEditing(currentValue => !currentValue);
+    setActiveItem(expenses.find(item => item.id === id));
+  };
+
+  const onUpdate = item => {
+    setExpenses(currentItems => {
+      currentItems[expenses.findIndex(obj => obj.id === item.id)] = item;
+      return currentItems;
+    });
+    setEditing(false);
   };
 
   return (
@@ -46,7 +57,7 @@ const Expenses = () => {
       <Modal animationType="slide" transparent={false} visible={editing}>
         <View style={{padding:60}}>
           <View>
-            <AddItemComponent />
+            <EditItem item={activeItem} updateItem={onUpdate} />
             <TouchableHighlight
               style={styles.btn}
               onPress={() => {
@@ -93,6 +104,44 @@ const AddItemComponent = ({addItem}) => {
         }}>
         <Text style={styles.btnText}>
           <Icon name="plus" size={20} /> Add Item
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const EditItem = ({item, updateItem}) => {
+  const [description, setDescription] = useState(item.text);
+  const [amount, setAmount] = useState(item.amount.toString());
+  const onChangeDescription = value => setDescription(value);
+  const onChangeAmount = value => setAmount(Number(value));
+  const onUpdate = () => {
+    updateItem({...item, text: description, amount});
+  };
+  return (
+    <View>
+      <TextInput
+        style={styles.input}
+        placeholder="description"
+        value={description}
+        onChangeText={onChangeDescription}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="amount"
+        keyboardType="numeric"
+        value={amount}
+        onChangeText={onChangeAmount}
+      />
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={() => {
+          onUpdate();
+          setDescription('');
+          setAmount('');
+        }}>
+        <Text style={styles.btnText}>
+          <Icon name="plus" size={20} /> Update
         </Text>
       </TouchableOpacity>
     </View>
