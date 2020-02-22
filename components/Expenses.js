@@ -20,7 +20,7 @@ const Expenses = ({data}) => {
   const [activeItem, setActiveItem] = useState();
 
   const addItem = newItem => {
-    if (!newItem.text || !newItem) {
+    if (!newItem.text || !newItem.amount) {
       Alert.alert('Please enter valid input');
     } else {
       setExpenses(currentItems => {
