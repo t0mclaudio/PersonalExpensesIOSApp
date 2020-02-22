@@ -28,7 +28,7 @@ const EditItem = ({item, updateItem}) => {
         style={styles.input}
         placeholder="amount"
         keyboardType="numeric"
-        value={amount}
+        value={amount && String(amount)}
         onChangeText={onChangeAmount}
       />
       <TouchableOpacity

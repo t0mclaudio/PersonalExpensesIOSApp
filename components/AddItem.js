@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 const AddItem = ({addItem}) => {
   const [description, setDescription] = useState('');
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState('');
   const onChangeDescription = value => setDescription(value);
   const onChangeAmount = value => setAmount(Number(value));
   const onAdd = () => {
@@ -26,9 +26,10 @@ const AddItem = ({addItem}) => {
       />
       <TextInput
         style={styles.input}
+        numericvalue
         placeholder="amount"
-        keyboardType='numeric'
-        value={amount}
+        keyboardType="numeric"
+        value={amount && String(amount)}
         onChangeText={onChangeAmount}
       />
       <TouchableOpacity
