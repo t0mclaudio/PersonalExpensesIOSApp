@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 const EditItem = ({item, updateItem}) => {
   const [description, setDescription] = useState(item.text);
-  const [amount, setAmount] = useState(item.amount.toString());
+  const [amount, setAmount] = useState(String(item.amount));
   const onChangeDescription = value => setDescription(value);
   const onChangeAmount = value => setAmount(Number(value));
   const onUpdate = () => {
