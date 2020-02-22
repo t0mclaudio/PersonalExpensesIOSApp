@@ -6,6 +6,7 @@ import {
   FlatList,
   Modal,
   TouchableHighlight,
+  Alert,
 } from 'react-native';
 import {uuid} from 'uuidv4';
 import withData from '../withData';
@@ -19,9 +20,13 @@ const Expenses = ({data}) => {
   const [activeItem, setActiveItem] = useState();
 
   const addItem = newItem => {
-    setExpenses(currentItems => {
-      return [{id: uuid(), date: new Date(), ...newItem}, ...currentItems];
-    });
+    if (!newItem.text || !newItem) {
+      Alert.alert('Please enter valid input');
+    } else {
+      setExpenses(currentItems => {
+        return [{id: uuid(), date: new Date(), ...newItem}, ...currentItems];
+      });
+    }
   };
 
   const remove = id => {
