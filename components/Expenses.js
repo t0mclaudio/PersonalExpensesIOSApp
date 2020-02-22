@@ -8,22 +8,18 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import {uuid} from 'uuidv4';
+import withData from '../withData';
 import Expense from './Expense';
 import AddItem from './AddItem';
 import EditItem from './EditItem';
 
-const Expenses = () => {
-  const [expenses, setExpenses] = useState([
-    { id: uuid(), date: new Date(), text: 'Milk', amount: 100 },
-    { id: uuid(), date: new Date(), text: 'Eggs', amount: 100 },
-    { id: uuid(), date: new Date(), text: 'Juice', amount: 100 },
-  ]);
+const Expenses = ({data}) => {
+  const [expenses, setExpenses] = useState(data);
   const [editing, setEditing] = useState(false);
   const [activeItem, setActiveItem] = useState();
 
   const addItem = newItem => {
     setExpenses(currentItems => {
-      console.table(newItem)
       return [{id: uuid(), date: new Date(), ...newItem}, ...currentItems];
     });
   };
@@ -85,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Expenses;
+export default withData(Expenses);
